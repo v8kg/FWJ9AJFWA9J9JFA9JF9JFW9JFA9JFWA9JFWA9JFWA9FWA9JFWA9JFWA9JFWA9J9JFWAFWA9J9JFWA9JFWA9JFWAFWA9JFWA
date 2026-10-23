@@ -25,6 +25,6 @@ try {
 
 $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($code))
 
-Start-Process "C:\Users\sylicism\AppData\Local\Microsoft\WindowsApps\wt.exe" `
+Start-Process "$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\wt.exe" `
   -Verb RunAs `
   -ArgumentList "new-tab powershell.exe -NoExit -EncodedCommand $encoded"
